@@ -145,7 +145,7 @@ export default function HomeScreen({ navigation }) {
 
         {loading && (
           <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color="#2563eb" />
+            <ActivityIndicator size="large" color="#60a5fa" />
           </View>
         )}
       </View>
@@ -154,67 +154,95 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  // Fundo escuro elegante
   safeArea: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#0f172a', // slate-900
   },
   container: {
     flex: 1,
     paddingHorizontal: 16,
     paddingBottom: 8,
   },
+
+  // Filtros (chips)
   filtersContainer: {
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
   filtersContent: {
     paddingRight: 8,
+    paddingLeft: 2,
   },
   filterChip: {
     paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingVertical: 9,
+    borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#d1d5db',
-    backgroundColor: '#ffffff',
-    marginRight: 8,
+    borderColor: '#334155', // slate-700
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    marginRight: 10,
   },
   filterChipActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#2563eb', // blue-600
     borderColor: '#2563eb',
   },
   filterChipPressed: {
-    opacity: 0.7,
+    opacity: 0.8,
+    transform: [{ scale: 0.98 }],
   },
   filterText: {
-    color: '#1f2937',
-    fontWeight: '600',
+    color: '#cbd5e1', // slate-300
+    fontWeight: '700',
     textTransform: 'capitalize',
+    letterSpacing: 0.2,
   },
   filterTextActive: {
     color: '#ffffff',
   },
+
+  // Lista e estados vazios
   listContent: {
-    paddingBottom: 24,
+    paddingBottom: 28,
+    paddingTop: 4,
+    gap: 10, // RN novo já aceita; se não, a FlatList lida sem problema
   },
+  emptyContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  emptyText: {
+    color: '#94a3b8', // slate-400
+    fontSize: 14,
+  },
+
+  // Cards de produto (glass/dark)
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: '#ffffff',
-    elevation: 1,
+    padding: 14,
+    borderRadius: 16,
+    backgroundColor: 'rgba(2, 6, 23, 0.65)', // glass escuro
+    borderWidth: 1,
+    borderColor: '#1e293b', // slate-800
+    elevation: 3,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 14,
+    marginBottom: 10,
   },
   cardPressed: {
-    opacity: 0.7,
+    opacity: 0.9,
+    transform: [{ scale: 0.995 }],
   },
   image: {
-    width: 72,
-    height: 72,
+    width: 76,
+    height: 76,
     marginRight: 16,
+    borderRadius: 12,
+    backgroundColor: '#0b1220',
+    borderWidth: 1,
+    borderColor: '#1f2937',
   },
   cardContent: {
     flex: 1,
@@ -222,40 +250,42 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
+    fontWeight: '700',
+    color: '#e5e7eb', // stone-200
+    lineHeight: 20,
   },
   cardPrice: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#2563eb',
+    fontWeight: '800',
+    color: '#60a5fa', // blue-400
+    letterSpacing: 0.2,
   },
-  emptyContainer: {
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  emptyText: {
-    color: '#6b7280',
-  },
+
+  // Loading overlay
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(243, 244, 246, 0.7)',
+    backgroundColor: 'rgba(2, 6, 23, 0.55)',
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  // Erro (mantido acessível e destacado no dark)
   errorContainer: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: '#fee2e2', // red-100
     padding: 12,
-    borderRadius: 8,
-    marginBottom: 8,
+    borderRadius: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#fecaca', // red-200
   },
   errorText: {
-    color: '#b91c1c',
-    fontWeight: '600',
+    color: '#7f1d1d', // red-900
+    fontWeight: '800',
   },
   errorAction: {
     marginTop: 4,
-    color: '#7f1d1d',
+    color: '#991b1b', // red-800
     fontSize: 12,
+    fontWeight: '600',
   },
 });
