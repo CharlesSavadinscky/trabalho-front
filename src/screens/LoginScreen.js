@@ -1,143 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
-import axios from 'axios';
-
-const USERS_ENDPOINT = 'https://fakestoreapi.com/users';
-const LOGIN_ENDPOINT = 'https://fakestoreapi.com/auth/login';
-
-export default function LoginScreen({ onLogin }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [users, setUsers] = useState([]);
-  const [loadingUsers, setLoadingUsers] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoadingUsers(true);
-        const response = await axios.get(USERS_ENDPOINT);
-        setUsers(response.data || []);
-      } catch (_error) {
-        Alert.alert('Erro', 'Não foi possível carregar os usuários. Verifique sua conexão e tente novamente.');
-      } finally {
-        setLoadingUsers(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  const handleSubmit = async () => {
-    if (!username.trim() || !password.trim()) {
-      Alert.alert('Campos obrigatórios', 'Informe usuário e senha.');
-      return;
-    }
-
-    const matchedUser = users.find((user) => user.username.toLowerCase() === username.trim().toLowerCase());
-
-    if (!matchedUser) {
-      Alert.alert('Usuário não encontrado', 'Verifique o usuário digitado ou consulte a lista disponível no README.');
-      return;
-    }
-
-    try {
-      setSubmitting(true);
-      const response = await axios.post(LOGIN_ENDPOINT, {
-        username: matchedUser.username,
-        password: password.trim(),
-      });
-
-      if (response.data?.token) {
-        onLogin({ token: response.data.token, user: matchedUser });
-      } else {
-        Alert.alert('Falha no login', 'Não foi possível autenticar. Tente novamente.');
-      }
-    } catch (_error) {
-      Alert.alert('Credenciais inválidas', 'Usuário ou senha incorretos.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const isBusy = loadingUsers || submitting;
-
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.keyboardContainer}
-      >
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-          <Text style={styles.title}>Bem-vindo!</Text>
-          <Text style={styles.subtitle}>Faça login com um usuário válido da Fake Store API.</Text>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Username</Text>
-            <TextInput
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Digite o usuário"
-              autoCapitalize="none"
-              autoCorrect={false}
-              style={styles.input}
-              editable={!isBusy}
-            />
-          </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Digite a senha"
-              secureTextEntry
-              autoCapitalize="none"
-              style={styles.input}
-              editable={!isBusy}
-            />
-          </View>
-
-          <Pressable
-            onPress={handleSubmit}
-            disabled={isBusy}
-            style={({ pressed }) => [
-              styles.buttonContainer,
-              pressed && styles.buttonPressed,
-              isBusy && styles.buttonDisabled,
-            ]}
-          >
-            <Text style={styles.buttonLabel}>{submitting ? 'Entrando...' : 'Entrar'}</Text>
-          </Pressable>
-
-          {loadingUsers && (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#2563eb" />
-              <Text style={styles.loadingText}>Carregando usuários autorizados...</Text>
-            </View>
-          )}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-}
-
 const styles = StyleSheet.create({
+  // Fundo e layout geral
   safeArea: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    backgroundColor: '#0f172a', // slate-900
   },
   keyboardContainer: {
     flex: 1,
@@ -146,59 +11,86 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 24,
     justifyContent: 'center',
-    gap: 16,
+    gap: 20,
   },
+
+  // Títulos
   title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#111827',
+    fontSize: 30,
+    fontWeight: '800',
+    color: '#e5e7eb', // zinc-200
     textAlign: 'center',
+    letterSpacing: 0.2,
   },
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#4b5563',
+    color: '#94a3b8', // slate-400
+    marginTop: -4,
   },
+
+  // Form
   formGroup: {
-    gap: 8,
+    gap: 10,
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#111827',
+    fontWeight: '700',
+    color: '#cbd5e1', // slate-300
+    letterSpacing: 0.3,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: '#ffffff',
+    borderColor: '#1f2937', // slate-800
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    backgroundColor: 'rgba(2, 6, 23, 0.6)', // glass escuro
     fontSize: 16,
+    color: '#e5e7eb',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 3,
   },
+
+  // Botão
   buttonContainer: {
     marginTop: 8,
-    backgroundColor: '#2563eb',
-    borderRadius: 8,
-    paddingVertical: 12,
+    backgroundColor: '#2563eb', // blue-600
+    borderRadius: 12,
+    paddingVertical: 14,
+    shadowColor: '#60a5fa', // leve glow
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 3,
   },
   buttonLabel: {
     color: '#ffffff',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '800',
     textAlign: 'center',
+    letterSpacing: 0.3,
   },
   buttonPressed: {
-    opacity: 0.6,
+    opacity: 0.9,
+    transform: [{ scale: 0.985 }],
   },
   buttonDisabled: {
-    backgroundColor: '#93c5fd',
+    backgroundColor: '#3b82f6', // blue-500
+    opacity: 0.7,
   },
+
+  // Loading
   loadingContainer: {
     alignItems: 'center',
     gap: 12,
+    marginTop: 12,
   },
   loadingText: {
-    color: '#4b5563',
+    color: '#94a3b8',
+    fontSize: 14,
   },
 });
